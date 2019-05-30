@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, ParamMap } from '@angular/router';
 import { Property } from '../models';
+import { PropertyService } from '../services/property.service';
+import { NavController } from '@ionic/angular';
 
 @Component({
   selector: 'app-property-details',
@@ -13,21 +15,12 @@ export class PropertyDetailsPage implements OnInit {
   public nameOfProperty: string;
   public currentProperty: Property;
 
-  public properties: Array<Property> = [];
-
   constructor(
-    private activatedRoute: ActivatedRoute
+    private activatedRoute: ActivatedRoute,
+    private propertyService: PropertyService,
+    private navCtrl: NavController
   ) { 
-    let property1 = new Property();
-    property1.id = 1;
-    property1.name = "One";
-
-    let property2 = new Property();
-    property2.id = 2;
-    property2.name = "Two";
-
-    this.properties.push(property1);
-    this.properties.push(property2);
+    this.propertyService.getAllProperties();
   }
 
   ngOnInit() {
@@ -42,15 +35,22 @@ export class PropertyDetailsPage implements OnInit {
       this.nameOfProperty = data.params.propertyName;
       this.propertyId = data.params.propertyId;
 
-      // Find the right property by ID
-      this.properties.forEach(
-        (property: Property) => {
-          if (property.id == this.propertyId) {
-            // Display this property
-            this.currentProperty = property;
-          }
-        }
-      )
+      // // Find the right property by ID
+      // this.properties.forEach(
+      //   (property: Property) => {
+      //     if (property.id == this.propertyId) {
+      //       // Display this property
+      //       this.currentProperty = property;
+      //     }
+      //   }
+      // )
+      this.currentProperty = 
+        this.propertyService.findPropertyById(this.propertyId);
+      
+      if (!this.currentProperty) {
+        alert("Property not found!");
+        this.navCtrl.navigateBack("");
+      }
     };
 
     this.activatedRoute.queryParamMap.subscribe(

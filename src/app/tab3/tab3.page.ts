@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { Property } from '../models';
 import { NavController } from '@ionic/angular';
 import { NavigationOptions } from '@ionic/angular/dist/providers/nav-controller';
+import { PropertyService } from '../services/property.service';
 
 @Component({
   selector: 'app-tab3',
@@ -13,19 +14,12 @@ export class Tab3Page {
   properties: Array<Property> = [];
 
   constructor(
-    private navCtrl: NavController
+    private navCtrl: NavController,
+    private propertyService: PropertyService
   ) {
-
-    let property1 = new Property();
-    property1.id = 1;
-    property1.name = "One";
-
-    let property2 = new Property();
-    property2.id = 2;
-    property2.name = "Two";
-
-    this.properties.push(property1);
-    this.properties.push(property2);
+    console.log(this.propertyService);
+    this.propertyService.getAllProperties();
+    this.properties = this.propertyService.properties;
 
   }
 
